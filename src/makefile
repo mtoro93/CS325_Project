@@ -1,9 +1,8 @@
-//placeholder only
-all:	mergesort insertsort
-mergesort: mergesort.cpp
-	g++ mergesort.cpp -o mergesort 
+all:	main 
 
-insertsort: insertsort.cpp
-	g++ insertsort.cpp -o insertsort
+main: main.cpp
+	g++ main.cpp -o tsp
+	
 clean:
-	rm -f *.out *.o mergesort insertsort
+	rm -f *.tour *.o tsp
+
