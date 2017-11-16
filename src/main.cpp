@@ -30,18 +30,34 @@ using namespace std;
  void nearestNeighbor(vector<city> &C, ofstream &outputFile)
  {
 	 
-	 cout<<"I'm in nearest neighbor"<<endl;
+	 
 		 
 	 //run algorithm
+	 //place the algorithim's trip count into the first line of out file
+	 int testCount = 500;
+	 outputFile<< testCount;
+	 outputFile << endl;
+	 
 	 
 	 //place in outputFile by looping through vector 
-	 
+	 int size = C.size();
+	 	for (int i = 0; i < size-1; i++) 
+		{
+			outputFile << C[i].cityID;
+			outputFile << " ";
+			outputFile << C[i].cityXCoord;
+			outputFile << " ";
+			outputFile << C[i].cityYCoord;
+			outputFile << endl;
+			
+		}
+		outputFile.close();
 	 
  }
  
  int main()
  {
-	 cout<<"I'm in  main"<<endl;
+	 
 	//read from file using ifstream
 	ifstream inputFile;		
 	//get file name from user
@@ -55,13 +71,54 @@ using namespace std;
 	string outFileName = inFileName + ".tour";
 	//open file for writing
 	outputFile.open(outFileName.c_str());
-	cout<<"outputFileName is " <<outFileName<<endl;
+	//cout<<"outputFileName is " <<outFileName<<endl;
 	//this is the vector to store all cities on the route
-	vector <city> route;		
-	
-	 
-	 
-
+	vector <city> route;	
+	//string to read the line
+	string line;
+	//number of lines in the file
+	int lineCount = 0;
+	//variable to hold city, x or y
+	//int cityValue;
+	//int xValue;
+	//int yValue;
+	vector <int> lineValues;
+	//read untl the end of the file
+	 while (!inputFile.eof())
+	{
+		
+		//read each line to get the line count 
+		while(getline(inputFile, line))
+		{
+			lineCount ++;
+		}
+		//cout<<lineCount;
+		//variable to hold city, x or y
+		int cityValue;
+		int xValue;
+		int yValue;
+		for (int i = 0; i < lineCount; i++) 
+		{
+			route.push_back(city());
+			//getline(inputFile, line);
+			//stringstream lineStream(line);
+			//read each value on the line and store in a vector called lineValues
+			inputFile >> cityValue;
+			inputFile >> xValue;
+			inputFile >> yValue;
+			
+			cout<<cityValue<<" ";
+			cout<<xValue<<" ";
+			cout<<yValue<<endl;
+			
+			route[i].cityID = cityValue;
+			route[i].cityXCoord = xValue;
+			route[i].cityYCoord = yValue;
+			//cout<<route[i].cityID << " ";
+			//cout<<route[i].cityXCoord << " ";
+			//cout<<route[i].cityYCoord<<endl;
+		}
+	}
 	 nearestNeighbor(route, outputFile);	//call stub for algorithm.
 	 
 	 return 0;
