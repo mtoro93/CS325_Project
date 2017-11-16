@@ -67,21 +67,16 @@ using namespace std;
 	inputFile.open(inFileName.c_str());
 	//write to file using ofstream
 	ofstream outputFile;
-	//file name is change.txt
+	//file name is apended to .tour
 	string outFileName = inFileName + ".tour";
 	//open file for writing
 	outputFile.open(outFileName.c_str());
-	//cout<<"outputFileName is " <<outFileName<<endl;
 	//this is the vector to store all cities on the route
 	vector <city> route;	
 	//string to read the line
 	string line;
 	//number of lines in the file
 	int lineCount = 0;
-	//variable to hold city, x or y
-	//int cityValue;
-	//int xValue;
-	//int yValue;
 	vector <int> lineValues;
 	//read untl the end of the file
 	 while (!inputFile.eof())
@@ -100,8 +95,6 @@ using namespace std;
 		for (int i = 0; i < lineCount; i++) 
 		{
 			route.push_back(city());
-			//getline(inputFile, line);
-			//stringstream lineStream(line);
 			//read each value on the line and store in a vector called lineValues
 			inputFile >> cityValue;
 			inputFile >> xValue;
