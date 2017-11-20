@@ -74,43 +74,35 @@ using namespace std;
 	//this is the vector to store all cities on the route
 	vector <city> route;	
 	//string to read the line
-	string line;
-	//number of lines in the file
-	int lineCount = 0;
-	vector <int> lineValues;
 	//read untl the end of the file
-	 while (!inputFile.eof())
-	{
-		
-		//read each line to get the line count 
-		while(getline(inputFile, line))
-		{
-			lineCount ++;
-		}
-		//cout<<lineCount;
-		//variable to hold city, x or y
 		int cityValue;
 		int xValue;
 		int yValue;
-		for (int i = 0; i < lineCount; i++) 
-		{
-			route.push_back(city());
-			//read each value on the line and store in a vector called lineValues
-			inputFile >> cityValue;
-			inputFile >> xValue;
-			inputFile >> yValue;
-			
-			cout<<cityValue<<" ";
-			cout<<xValue<<" ";
-			cout<<yValue<<endl;
-			
-			route[i].cityID = cityValue;
-			route[i].cityXCoord = xValue;
-			route[i].cityYCoord = yValue;
-			//cout<<route[i].cityID << " ";
-			//cout<<route[i].cityXCoord << " ";
-			//cout<<route[i].cityYCoord<<endl;
-		}
+		int i = 0;
+	 while (inputFile >> cityValue)
+	{
+
+		//cout<<lineCount;
+		//variable to hold city, x or y
+		route.push_back(city());
+
+		
+		//read each value on the line and store in a vector called lineValues
+		inputFile >> xValue;
+		inputFile >> yValue;
+		
+		cout<<cityValue<<" ";
+		cout<<xValue<<" ";
+		cout<<yValue<<endl;
+		
+		route[i].cityID = cityValue;
+		route[i].cityXCoord = xValue;
+		route[i].cityYCoord = yValue;
+		//cout<<route[i].cityID << " ";
+		//cout<<route[i].cityXCoord << " ";
+		//cout<<route[i].cityYCoord<<endl;
+		i++;
+		
 	}
 	 nearestNeighbor(route, outputFile);	//call stub for algorithm.
 	 
