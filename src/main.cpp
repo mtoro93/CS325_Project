@@ -18,7 +18,8 @@
 #include <sstream>
 #include <ctime>
 #include <chrono>
-
+#include <cmath>
+#include <iomanip>
 using namespace std;
 
 
@@ -26,19 +27,25 @@ using namespace std;
  struct city
  {
 	 int cityID;   		//City Identifier
-	 int cityXCoord;	//City X Coordinate
-	 int cityYCoord;	//City Y Coordinate
+	 double cityXCoord;	//City X Coordinate
+	 double cityYCoord;	//City Y Coordinate
 	 double distance;	//distance from start
 	 
  };
+ /*****************************************************************
+ *checkTime() uses time() from the C++ std library to check curr time
+ *it is passed in the start time of the program
+ * if time exceeds 180 seconds, program will exit
+  ******************************************************************/
  
- 
- 
- void checkTime(int start)
+ void checkTime(float start)
  {
+	float currTime = time(0);
+	float secondsElapsed = (currTime - start);
+	//cout<<"In checkTime, seconds Elapsed is" <<setprecision(8)<<secondsElapsed<<endl;
+	//cout<<"start is : "<<start<<endl;
+	//cout<<"clock is: "<<currTime<<endl;
 	
-	double secondsElapsed = (clock() - start) /(double) CLOCKS_PER_SEC;
-	cout<<"In checkTime, seconds Elapsed is" <<secondsElapsed<<endl;
 	if(secondsElapsed >= 180)
 		{ 
 			// 180 seconds elapsed -> leave main lopp 
@@ -49,19 +56,58 @@ using namespace std;
 	
  }
  
- void nearestNeighbor(vector<city> &C, ofstream &outputFile, int start, int choice)
+ /*****************************************************************
+ *caluclateDistanceFromStart()  take the vector of cities 
+ *calculates the distance from first point in the array as the origin
+ * rounded to the nearest int
+  ******************************************************************/
+ int calculateDistanceFromStart(vector<city> &C, float start, int choice)
+ {
+	 int size = C.size();
+	 double startX = C[0].cityXCoord;
+	 double startY = C[0].cityYCoord;
+	 
+	 for (int i = 0; i < size; i++) 
+		{
+			if (choice ==1)
+				checkTime(start);
+			C[i].distance = sqrt((C[i].cityXCoord - startX)* (C[i].cityXCoord - startX) + (C[i].cityYCoord - startY) *(C[i].cityYCoord - startY));
+			//cout<<"Distance from origin (not rounded) is: "<<C[i].distance<<endl;
+			C[i].distance = round(C[i].distance);
+			//cout<<"Distance from origin rounded is: "<<C[i].distance<<endl;
+		}
+ } 
+  /*****************************************************************
+ *sortByDisatnce() takes in the vector of cities
+ *it conducts a merge sort of the distances from the first
+ *entry in the vector 
+ ******************************************************************/
+ void sortByDistance(vector<city> &C, float start, int choice)	
+ {
+	 //placeholder to Merge Sort by distances calculated
+ }
+ /*****************************************************************
+ *verifies the time from the start of the program running
+ *if called, the start time is passed in
+ *program exits if time exceeds 180 seconds 
+ 
+ ******************************************************************/
+ 
+ void nearestNeighbor(vector<city> &C, ofstream &outputFile, float start, int choice)
  {
 	 
 	 
 		 
 	 //run algorithm, each time checking for elapsed time by calling checkTime on start
+	 	 
 	 //and exiting if max time is exceeded by passing start to checkTime()
-	 checkTime(start);
+	 if(choice == 1)
+		checkTime(start);
 		
 	 //place the algorithim's trip count into the first line of out file
-	 int testCount = 500;
-	 outputFile<< testCount;
-	 outputFile << endl;
+	// int testCount = 500;
+	// outputFile<< testCount;
+	// outputFile << endl;
 	 if(choice == 1)
 		checkTime(start);
 	 
@@ -93,9 +139,9 @@ using namespace std;
 	 cout<<"For unlilmited mode with no maximum time limit set, press 2 and Enter. "<<endl;
 	 cin>>choice;
 	//variable for start time to track count up to 180 seconds
-	clock_t start;
-	start = clock();
-	cout<<"start time is "<<start<<endl;
+	float start = time(0);
+
+	cout<<setprecision(8)<<"start time is "<<start<<endl;
 	
 	//read from file using ifstream
 	ifstream inputFile;		
@@ -143,6 +189,9 @@ using namespace std;
 		i++;
 		
 	}
+	//calculate nearest distance from first point in the list.
+	 calculateDistanceFromStart(route, start, choice);
+	 sortByDistance(route, start, choice);
 	 nearestNeighbor(route, outputFile, start, choice);	//call stub for algorithm.
 	 
 	 return 0;
