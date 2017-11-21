@@ -28,10 +28,13 @@ using namespace std;
 	 int cityID;   		//City Identifier
 	 int cityXCoord;	//City X Coordinate
 	 int cityYCoord;	//City Y Coordinate
+	 double distance;	//distance from start
 	 
  };
  
- int checkTime(int start)
+ 
+ 
+ void checkTime(int start)
  {
 	
 	double secondsElapsed = (clock() - start) /(double) CLOCKS_PER_SEC;
@@ -46,7 +49,7 @@ using namespace std;
 	
  }
  
- void nearestNeighborLimited(vector<city> &C, ofstream &outputFile, int start, int choice)
+ void nearestNeighbor(vector<city> &C, ofstream &outputFile, int start, int choice)
  {
 	 
 	 
@@ -140,7 +143,7 @@ using namespace std;
 		i++;
 		
 	}
-	 nearestNeighborLimited(route, outputFile, start, choice);	//call stub for algorithm.
+	 nearestNeighbor(route, outputFile, start, choice);	//call stub for algorithm.
 	 
 	 return 0;
  }
