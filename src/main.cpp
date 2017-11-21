@@ -46,7 +46,7 @@ using namespace std;
 	
  }
  
- void nearestNeighborLimited(vector<city> &C, ofstream &outputFile, int start)
+ void nearestNeighborLimited(vector<city> &C, ofstream &outputFile, int start, int choice)
  {
 	 
 	 
@@ -59,7 +59,8 @@ using namespace std;
 	 int testCount = 500;
 	 outputFile<< testCount;
 	 outputFile << endl;
-	 checkTime(start);
+	 if(choice == 1)
+		checkTime(start);
 	 
 	 //place in outputFile by looping through vector 
 	 
@@ -72,7 +73,8 @@ using namespace std;
 			outputFile << " ";
 			outputFile << C[i].cityYCoord;
 			outputFile << endl;
-			checkTime(start);
+			if (choice ==1)
+				checkTime(start);
 			
 		}
 		outputFile.close();
@@ -138,7 +140,7 @@ using namespace std;
 		i++;
 		
 	}
-	 nearestNeighborLimited(route, outputFile, start);	//call stub for algorithm.
+	 nearestNeighborLimited(route, outputFile, start, choice);	//call stub for algorithm.
 	 
 	 return 0;
  }
