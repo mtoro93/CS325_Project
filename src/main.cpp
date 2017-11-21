@@ -17,7 +17,11 @@
 #include<stdlib.h>
 #include <sstream>
 #include <ctime>
+#include <chrono>
+
 using namespace std;
+
+
 
  struct city
  {
@@ -27,19 +31,38 @@ using namespace std;
 	 
  };
  
- void nearestNeighbor(vector<city> &C, ofstream &outputFile)
+ int checkTime(int start)
+ {
+	
+	double secondsElapsed = (clock() - start) /(double) CLOCKS_PER_SEC;
+	cout<<"In checkTime, seconds Elapsed is" <<secondsElapsed<<endl;
+	if(secondsElapsed >= 180)
+		{ 
+			// 180 seconds elapsed -> leave main lopp 
+			cout<<"Time limit exceeded.   Exiting program"<<endl;
+			exit (0);
+		}
+		
+	
+ }
+ 
+ void nearestNeighborLimited(vector<city> &C, ofstream &outputFile, int start)
  {
 	 
 	 
 		 
-	 //run algorithm
+	 //run algorithm, each time checking for elapsed time by calling checkTime on start
+	 //and exiting if max time is exceeded by passing start to checkTime()
+	 checkTime(start);
+		
 	 //place the algorithim's trip count into the first line of out file
 	 int testCount = 500;
 	 outputFile<< testCount;
 	 outputFile << endl;
-	 
+	 checkTime(start);
 	 
 	 //place in outputFile by looping through vector 
+	 
 	 int size = C.size();
 	 	for (int i = 0; i < size; i++) 
 		{
@@ -49,6 +72,7 @@ using namespace std;
 			outputFile << " ";
 			outputFile << C[i].cityYCoord;
 			outputFile << endl;
+			checkTime(start);
 			
 		}
 		outputFile.close();
@@ -57,7 +81,17 @@ using namespace std;
  
  int main()
  {
-	 
+	  //integer set for menu selection  
+	 int choice = 0;
+	 cout<<"Please select from the following options: "<<endl<<endl;
+	 cout<<"For competition mode with max of 180 seconds press 1 and Enter. "<<endl<<endl;
+	 cout<<"For unlilmited mode with no maximum time limit set, press 2 and Enter. "<<endl;
+	 cin>>choice;
+	//variable for start time to track count up to 180 seconds
+	clock_t start;
+	start = clock();
+	cout<<"start time is "<<start<<endl;
+	
 	//read from file using ifstream
 	ifstream inputFile;		
 	//get file name from user
@@ -91,9 +125,9 @@ using namespace std;
 		inputFile >> xValue;
 		inputFile >> yValue;
 		
-		cout<<cityValue<<" ";
-		cout<<xValue<<" ";
-		cout<<yValue<<endl;
+		//cout<<cityValue<<" ";
+		//cout<<xValue<<" ";
+		//cout<<yValue<<endl;
 		
 		route[i].cityID = cityValue;
 		route[i].cityXCoord = xValue;
@@ -104,7 +138,7 @@ using namespace std;
 		i++;
 		
 	}
-	 nearestNeighbor(route, outputFile);	//call stub for algorithm.
+	 nearestNeighborLimited(route, outputFile, start);	//call stub for algorithm.
 	 
 	 return 0;
  }
