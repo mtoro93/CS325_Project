@@ -104,7 +104,7 @@ using namespace std;
 	 if(choice == 1)
 		checkTime(start);
 		
-	 //place the algorithim's trip count into the first line of out file
+	 //place the algorithim's total length of the tour as first item in output file
 	// int testCount = 500;
 	// outputFile<< testCount;
 	// outputFile << endl;
@@ -121,6 +121,8 @@ using namespace std;
 			outputFile << C[i].cityXCoord;
 			outputFile << " ";
 			outputFile << C[i].cityYCoord;
+			outputFile << " ";
+			outputFile << C[i].distance;
 			outputFile << endl;
 			if (choice ==1)
 				checkTime(start);
