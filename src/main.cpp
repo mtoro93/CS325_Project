@@ -55,20 +55,17 @@ using namespace std;
 	 
  }
  
- int main()
+ int main(int argc, char* argv[])
  {
-	 
+	//accept input from the command line
+	char* inFileName = argv[1];
 	//read from file using ifstream
 	ifstream inputFile;		
-	//get file name from user
-	cout<<"please enter the name of the input file."<<endl;
-	string inFileName;
-	cin>> inFileName;
-	inputFile.open(inFileName.c_str());
+	inputFile.open(inFileName);
 	//write to file using ofstream
 	ofstream outputFile;
 	//file name is apended to .tour
-	string outFileName = inFileName + ".tour";
+	string outFileName = string(inFileName) + ".tour";
 	//open file for writing
 	outputFile.open(outFileName.c_str());
 	//this is the vector to store all cities on the route
