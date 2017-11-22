@@ -17,22 +17,29 @@
 #include<stdlib.h>
 #include <sstream>
 #include <ctime>
+#include <cmath>
 using namespace std;
+typedef struct city city;
 
  struct city
  {
 	 int cityID;   		//City Identifier
 	 int cityXCoord;	//City X Coordinate
 	 int cityYCoord;	//City Y Coordinate
-	 
  };
  
- void nearestNeighbor(vector<city> &C, ofstream &outputFile)
+ double distance(city* c1, city* c2)
  {
-	 
-	 
-		 
+	 double xDistance = pow(c1->cityXCoord - c2->cityXCoord, 2);
+	 double yDistance = pow(c1->cityYCoord - c2->cityYCoord, 2);
+	 return round(sqrt(xDistance + yDistance));
+ }
+ 
+ void nearestNeighbor(vector<city> &C, ofstream &outputFile)
+ {	 
 	 //run algorithm
+	 
+	 
 	 //place the algorithim's trip count into the first line of out file
 	 int testCount = 500;
 	 outputFile<< testCount;
@@ -83,7 +90,6 @@ using namespace std;
 		//variable to hold city, x or y
 		route.push_back(city());
 
-		
 		//read each value on the line and store in a vector called lineValues
 		inputFile >> xValue;
 		inputFile >> yValue;
@@ -99,9 +105,12 @@ using namespace std;
 		//cout<<route[i].cityXCoord << " ";
 		//cout<<route[i].cityYCoord<<endl;
 		i++;
-		
 	}
-	 nearestNeighbor(route, outputFile);	//call stub for algorithm.
+	
+	// test code
+	//cout<<distance(&route[0], &route[1])<<endl;
+	
+	nearestNeighbor(route, outputFile);	//call stub for algorithm.
 	 
-	 return 0;
+	return 0;
  }
