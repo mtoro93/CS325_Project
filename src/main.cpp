@@ -14,10 +14,11 @@
 #include <string>
 #include <cstdlib>
 #include <cstddef>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <sstream>
 #include <ctime>
 #include <cmath>
+#include <climits>
 using namespace std;
 typedef struct city city;
 
@@ -26,6 +27,9 @@ typedef struct city city;
 	 int cityID;   		//City Identifier
 	 int cityXCoord;	//City X Coordinate
 	 int cityYCoord;	//City Y Coordinate
+	 bool visited;		// whether the city has been visited in the path yet
+	 city* closestNeighbor;	// pointer to a city's nearest neighbor
+	 long long int distanceToNeighbor; // distance to the city's nearest neighbor
  };
 
  /*****************************************************************
@@ -58,11 +62,11 @@ typedef struct city city;
 *
 *******************************************************************/
  
- double distance(city* c1, city* c2)
+  long long int distance(city* c1, city* c2)
  {
-	 double xDistance = pow(c1->cityXCoord - c2->cityXCoord, 2);
-	 double yDistance = pow(c1->cityYCoord - c2->cityYCoord, 2);
-	 return round(sqrt(xDistance + yDistance));
+	  long long int xDistance = pow(c1->cityXCoord - c2->cityXCoord, 2);
+	  long long int yDistance = pow(c1->cityYCoord - c2->cityYCoord, 2);
+	 return  (long long int) round(sqrt(xDistance + yDistance));
  }
 
 /*******************************************************************
@@ -77,8 +81,53 @@ typedef struct city city;
  void nearestNeighbor(vector<city> &C, ofstream &outputFile, float start)
  {	 
 	 //run algorithm, be sure to call checkTime frequently.
+	 city* cur = &C[0];
+	 cur->visited = true;
 	 
+	 long long int tour;
+	 for (int i = 0; i < C.size(); i++)
+	 {
+		int index;
+		long long int min = LLONG_MAX;
+		for (int k = 0; k < C.size(); k++)
+		{
+			if (cur->cityID != C[k].cityID && C[k].visited != true)
+			{
+				long long int temp = distance(cur, &C[k]);
+				if  (temp < min)
+				{
+					min = temp;
+					cur->closestNeighbor = &C[k];
+					cur->distanceToNeighbor = min;
+					index = k;
+				}
+			}
+		}
+		tour+=cur->distanceToNeighbor;
+		cur = &C[index];
+		cur->visited = true;
+	 }
+	
+	// complete the circuit routing the last city back to the first
+	cur->distanceToNeighbor = distance(cur, &C[0]);
+	tour+=cur->distanceToNeighbor;
+	cur->closestNeighbor = &C[0];
+	
+	//printf("tour length: %d\n", tour);
 	 
+	//place the algorithim's trip count into the first line of out file
+	outputFile << tour;
+	outputFile << endl;
+	 
+	cur = &C[0];
+	for (int j = 0; j < C.size(); j++)
+	{
+		outputFile << cur->cityID;
+		outputFile << endl;
+		cur = cur->closestNeighbor;
+	}
+	 
+	 /*
 	 //place the algorithim's trip count into the first line of out file
 	 int testCount = 500;
 	 outputFile<< testCount;
@@ -97,6 +146,7 @@ typedef struct city city;
 			outputFile << endl;
 			
 		}
+		*/
 		outputFile.close();
 	 
  }
@@ -105,20 +155,28 @@ typedef struct city city;
  {
 	//accept input from the command line
 	char* inFileName = argv[1];
+	
 	//variable for start time to track count up to 180 seconds
 	float start = time(0);
+	
 	//cout<<setprecision(8)<<"start time is "<<start<<endl;
+	
 	 //read from file using ifstream
 	ifstream inputFile;		
 	inputFile.open(inFileName);
+	
 	//write to file using ofstream
 	ofstream outputFile;
+	
 	//file name is apended to .tour
 	string outFileName = string(inFileName) + ".tour";
+	
 	//open file for writing
 	outputFile.open(outFileName.c_str());
+	
 	//this is the vector to store all cities on the route
 	vector <city> route;	
+	
 	//string to read the line
 	//read untl the end of the file
 		int cityValue;
@@ -136,21 +194,19 @@ typedef struct city city;
 		inputFile >> xValue;
 		inputFile >> yValue;
 		
-		cout<<cityValue<<" ";
-		cout<<xValue<<" ";
-		cout<<yValue<<endl;
+		//cout<<cityValue<<" ";
+		//cout<<xValue<<" ";
+		//cout<<yValue<<endl;
 		
 		route[i].cityID = cityValue;
 		route[i].cityXCoord = xValue;
 		route[i].cityYCoord = yValue;
+		route[i].visited = false;
 		//cout<<route[i].cityID << " ";
 		//cout<<route[i].cityXCoord << " ";
 		//cout<<route[i].cityYCoord<<endl;
 		i++;
 	}
-	
-	// test code
-	//cout<<distance(&route[0], &route[1])<<endl;
 	
 	nearestNeighbor(route, outputFile, start);	//call stub for algorithm.
 	 
