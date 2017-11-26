@@ -27,6 +27,36 @@ typedef struct city city;
 	 int cityXCoord;	//City X Coordinate
 	 int cityYCoord;	//City Y Coordinate
  };
+
+ /*****************************************************************
+ *checkTime() uses time() from the C++ std library to check curr time
+ *it is passed in the start time of the program
+ * if time exceeds 180 seconds, program will exit
+  ******************************************************************/
+ 
+ void checkTime(float start)
+ {
+	float currTime = time(0);
+	float secondsElapsed = (currTime - start);
+	//cout<<"In checkTime, seconds Elapsed is" <<setprecision(8)<<secondsElapsed<<endl;
+	//cout<<"start is : "<<start<<endl;
+	//cout<<"clock is: "<<currTime<<endl;
+	
+	if(secondsElapsed >= 180)
+		{ 
+			// 180 seconds elapsed -> leave main lopp 
+			cout<<"Time limit exceeded.   Exiting program"<<endl;
+			exit (0);
+		}
+		
+	
+ }
+
+/*******************************************************************
+*distance() takes in a pointer to two city structs and calculates
+*the distance between their x and y coordinates.
+*
+*******************************************************************/
  
  double distance(city* c1, city* c2)
  {
@@ -34,10 +64,19 @@ typedef struct city city;
 	 double yDistance = pow(c1->cityYCoord - c2->cityYCoord, 2);
 	 return round(sqrt(xDistance + yDistance));
  }
+
+/*******************************************************************
+*nearestNeighbor() takes input of a vector of cities and an ofstream 
+*it will call distance to calculate the nearest neighbor to the
+*current city, mark it as visited and then move on to the
+*nearest neighbor, repeating until the entire route is complete
+*It will then write to the ofstream object the total length of the tour
+* and then print all the city ID's in the order they were visited
+*******************************************************************/
  
- void nearestNeighbor(vector<city> &C, ofstream &outputFile)
+ void nearestNeighbor(vector<city> &C, ofstream &outputFile, float start)
  {	 
-	 //run algorithm
+	 //run algorithm, be sure to call checkTime frequently.
 	 
 	 
 	 //place the algorithim's trip count into the first line of out file
@@ -66,7 +105,10 @@ typedef struct city city;
  {
 	//accept input from the command line
 	char* inFileName = argv[1];
-	//read from file using ifstream
+	//variable for start time to track count up to 180 seconds
+	float start = time(0);
+	//cout<<setprecision(8)<<"start time is "<<start<<endl;
+	 //read from file using ifstream
 	ifstream inputFile;		
 	inputFile.open(inFileName);
 	//write to file using ofstream
@@ -110,7 +152,7 @@ typedef struct city city;
 	// test code
 	//cout<<distance(&route[0], &route[1])<<endl;
 	
-	nearestNeighbor(route, outputFile);	//call stub for algorithm.
+	nearestNeighbor(route, outputFile, start);	//call stub for algorithm.
 	 
 	return 0;
  }
