@@ -84,7 +84,7 @@ typedef struct city city;
 	 city* cur = &C[0];
 	 cur->visited = true;
 	 
-	 long long int tour;
+	 long long int tour = 0;
 	 for (int i = 0; i < C.size(); i++)
 	 {
 		int index;
