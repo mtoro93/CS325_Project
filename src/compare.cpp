@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "bst.hpp"
+//#include "bst.hpp"
 #include "compare.hpp"
 
 /*----------------------------------------------------------------------------
@@ -30,6 +30,21 @@ int compare(struct city* left, struct city* right)
 	leftInt = (left)->cityXCoord; //cast to data, then use the number values as ints
 	rightInt = (right)->cityXCoord;
 		
+	if (rightInt > leftInt) //-1 for left less than right, 0 for equals, 1 for greater than
+		return -1;
+	else if (rightInt == leftInt)
+		return 0;
+	else
+		return 1;
+}
+
+int compareID(struct city* left, struct city* right)
+{
+	int leftInt;
+	int rightInt;
+	leftInt = (left)->cityID; //cast to data, then use the number values as ints
+	rightInt = (right)->cityID;
+
 	if (rightInt > leftInt) //-1 for left less than right, 0 for equals, 1 for greater than
 		return -1;
 	else if (rightInt == leftInt)
