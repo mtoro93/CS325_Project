@@ -9,7 +9,6 @@
  ***************************************************/
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <stdio.h>
 #include <string>
 #include <cstdlib>
@@ -19,18 +18,10 @@
 #include <ctime>
 #include <cmath>
 #include <climits>
-using namespace std;
-typedef struct city city;
+#include "bst.hpp"
+#include "compare.hpp"
 
- struct city
- {
-	 int cityID;   		//City Identifier
-	 int cityXCoord;	//City X Coordinate
-	 int cityYCoord;	//City Y Coordinate
-	 bool visited;		// whether the city has been visited in the path yet
-	 city* closestNeighbor;	// pointer to a city's nearest neighbor
-	 long long int distanceToNeighbor; // distance to the city's nearest neighbor
- };
+
 
  /*****************************************************************
  *checkTime() uses time() from the C++ std library to check curr time
@@ -207,8 +198,9 @@ typedef struct city city;
 		//cout<<route[i].cityYCoord<<endl;
 		i++;
 	}
-	
-	nearestNeighbor(route, outputFile, start);	//call stub for algorithm.
+	 struct BSTree* myTree = buildBSTTree(route, i);
+	 printTree(myTree);
+	//nearestNeighbor(route, outputFile, start);	//call stub for algorithm.
 	 long long int finish = time(0);
 	 cout<<"Finish time is "<<finish<<endl;
 	 long long int dur = finish - start;
