@@ -38,10 +38,10 @@ typedef struct city city;
  * if time exceeds 180 seconds, program will exit
   ******************************************************************/
  
- void checkTime(float start)
+ void checkTime(long long int start)
  {
-	float currTime = time(0);
-	float secondsElapsed = (currTime - start);
+	long long int currTime = time(0);
+	long long int secondsElapsed = (currTime - start);
 	//cout<<"In checkTime, seconds Elapsed is" <<setprecision(8)<<secondsElapsed<<endl;
 	//cout<<"start is : "<<start<<endl;
 	//cout<<"clock is: "<<currTime<<endl;
@@ -157,8 +157,8 @@ typedef struct city city;
 	char* inFileName = argv[1];
 	
 	//variable for start time to track count up to 180 seconds
-	float start = time(0);
-	
+	long long int start = time(0);
+	cout<<"Start time is "<<start<<endl;
 	//cout<<setprecision(8)<<"start time is "<<start<<endl;
 	
 	 //read from file using ifstream
@@ -209,6 +209,9 @@ typedef struct city city;
 	}
 	
 	nearestNeighbor(route, outputFile, start);	//call stub for algorithm.
-	 
+	 long long int finish = time(0);
+	 cout<<"Finish time is "<<finish<<endl;
+	 long long int dur = finish - start;
+	 cout<<"Duration  is "<<dur<<endl;
 	return 0;
  }
