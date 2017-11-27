@@ -243,19 +243,24 @@ val is not null
 struct Node *_removeNode(struct Node *cur, struct city* val)
 {
 	struct Node* temp;
-	if (compareID(val, (struct city*)cur->val) == 0) //if you find the node, remove it
+	if (compare(val, (struct city*)cur->val) == 0) //if you find the node, remove it
 	{
-		if (cur->right != 0) //if it has a right node, replace it with the leftmost of the right side
-		{
-			cur->val = _leftMost(cur->right);
-			cur->right = _removeLeftMost(cur->right);
+		if (compareID(val, (struct city*)cur->val) == 0) {
+			if (cur->right != 0) //if it has a right node, replace it with the leftmost of the right side
+			{
+				cur->val = _leftMost(cur->right);
+				cur->right = _removeLeftMost(cur->right);
+			}
+			else //otherwise replace it with the left side
+			{
+				temp = cur->left;
+				free(cur);
+				cur = 0;
+				return temp;
+			}
 		}
-		else //otherwise replace it with the left side
-		{
-			temp = cur->left;
-			free(cur);
-			cur = 0;
-			return temp;
+		else {
+			cur->right = _removeNode(cur->right, val);
 		}
 	}
 	else if (compare(val, (struct city*)cur->val) == -1) //keep going down left or right looking for the node
@@ -283,12 +288,12 @@ void removeBSTree(struct BSTree *tree, struct city* val)
 
 void printNode(struct Node *cur) {
 	if (cur == 0) return;
-	printf("(");
+	//printf("(");
 	printNode(cur->left);
 	/*Call print_type which prints the value of the TYPE*/
 	print_type((struct city*)cur->val);
 	printNode(cur->right);
-	printf(")");
+	//printf(")\n");
 }
 
 void printTree(struct BSTree *tree) {
@@ -451,6 +456,7 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 	
 	//this is the vector to store all cities on the route
 	vector <city> route;	
+	vector <city> route2;
 	
 	//string to read the line
 	//read untl the end of the file
@@ -464,6 +470,7 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 		//cout<<lineCount;
 		//variable to hold city, x or y
 		route.push_back(city());
+		route2.push_back(city());
 
 		//read each value on the line and store in a vector called lineValues
 		inputFile >> xValue;
@@ -492,12 +499,12 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 	 printTree(myTree);
 	 for (int h = 0; h < i; h++) {
 		 city* temp = (city*)_leftMost(myTree->root);
-		 route[h].cityID = (*temp).cityID;
-		 route[h].cityXCoord = (*temp).cityXCoord;
-		 route[h].cityYCoord = (*temp).cityYCoord;
-		 _removeNode(myTree->root, (struct city*)_leftMost(myTree->root));
+		 route2[h].cityID = (*temp).cityID;
+		 route2[h].cityXCoord = (*temp).cityXCoord;
+		 route2[h].cityYCoord = (*temp).cityYCoord;
+		 _removeNode(myTree->root, temp);
 	 }
-	nearestNeighbor(route, outputFile, start);	//call stub for algorithm.
+	nearestNeighbor(route2, outputFile, start);	//call stub for algorithm.
 	 long long int finish = time(0);
 	 cout<<"Finish time is "<<finish<<endl;
 	 long long int dur = finish - start;

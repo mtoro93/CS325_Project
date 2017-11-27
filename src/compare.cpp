@@ -56,9 +56,9 @@ int compareID(struct city* left, struct city* right)
 /*Define this function, type casting the value of void * to the desired type*/
 void print_type(struct city* curval)
 {
-	printf("CityID:%d", curval->cityID);
-	printf("X:%d",curval->cityXCoord);
-	printf("Y:%d", curval->cityYCoord);
+	printf("CityID:%d\n", curval->cityID);
+	printf("X:%d\n",curval->cityXCoord);
+	printf("Y:%d\n\n", curval->cityYCoord);
 	
 }
 
