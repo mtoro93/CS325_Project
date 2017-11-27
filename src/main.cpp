@@ -358,11 +358,11 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 	 //run algorithm, be sure to call checkTime frequently.
 	 city* cur = &C[0];
 	 cur->visited = true;
-	 
+	 int index;
 	 long long int tour = 0;
 	 for (int i = 0; i < C.size(); i++)
 	 {
-		int index;
+		
 		long long int min = LLONG_MAX;
 		for (int k = 0; k < C.size(); k++)
 		{
@@ -502,7 +502,7 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 	 cout<<"Finish time is "<<finish<<endl;
 	 long long int dur = finish - start;
 	 cout<<"Duration  is "<<dur<<endl;
-	 deleteBSTree(myTree);
+	 //deleteBSTree(myTree);
 	 /*
 	 for (int h = 0; h < i; h++)
 	 {
