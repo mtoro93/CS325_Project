@@ -125,7 +125,7 @@ param:  cur	the current root node
 val	the value to be added to the binary search tree
 pre:	val is not null
 */
-struct Node *_addNode(struct Node *cur, struct city* val)
+struct Node *_addNode(struct Node *cur, struct city* val, struct BSTree* aTree)
 {
 	struct Node* newNode;
 	if (!cur) //if current node doesn't exist, make it
@@ -136,10 +136,69 @@ struct Node *_addNode(struct Node *cur, struct city* val)
 		newNode->left = newNode->right = 0;
 		return newNode;
 	}
+	if (compareY(val, (struct city*)cur->val) == -1 && cur->val == aTree->root){
+		newNode = (struct Node*)malloc(sizeof(struct Node));
+		assert(newNode != 0);
+		newNode->val = val;
+		aTree->root = newNode;
+		if (compare(val, (struct city*)cur->val) == -1) {
+			newNode->left = cur;
+			newNode->right = 0;
+			return newNode;
+		}
+		else {
+			newNode->right = cur;
+			newNode->left = 0;
+			return newNode;
+		}
+	}	
 	if (compare(val, (struct city*)cur->val) == -1) //if value is less than current node's value, go down left side, otherwise go down right
-		cur->left = _addNode(cur->left, val);
+	{
+		if (!!(cur->left) && compareY(val, (struct city*)cur->left->val) == -1) {
+			
+			newNode = (struct Node*)malloc(sizeof(struct Node));
+			assert(newNode != 0);
+			newNode->val = val;
+			if (compare(val, (struct city*)cur->left->val) == -1)
+			{
+				newNode->left = cur->left;
+				newNode->right = 0;
+			}
+			else
+			{
+				newNode->right = cur->left;
+				newNode->left = 0;
+			}
+			cur->left = newNode;
+			//return newNode;
+		}
+		else {
+			cur->left = _addNode(cur->left, val,aTree);
+		}
+	}
 	else
-		cur->right = _addNode(cur->right, val);
+	{
+		if ((!!cur->right) && compareY(val, (struct city*)cur->right->val) != -1) {
+			
+			newNode = (struct Node*)malloc(sizeof(struct Node));
+			assert(newNode != 0);
+			newNode->val = val;
+			if (compare(val, (struct city*)cur->right->val) == -1)
+			{
+				newNode->left = cur->right;
+				newNode->right = 0;
+			}
+			else
+			{
+				newNode->right = cur->right;
+				newNode->left = 0;
+			}
+			cur->right = newNode;
+		}
+		else {
+			cur->right = _addNode(cur->right, val,aTree);
+		}
+	}
 	return cur;
 }
 
@@ -155,7 +214,7 @@ tree now contains the value, val
 */
 void addBSTree(struct BSTree *tree, struct city* val)
 {
-	tree->root = _addNode(tree->root, val);
+	tree->root = _addNode(tree->root, val, tree);
 	tree->cnt++;
 }
 
@@ -495,7 +554,8 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 		 pRoute[h] = (struct city*)malloc(sizeof(struct city*));
 		 pRoute[h] = &route[h];
 	 }
-	 BSTree* myTree = buildBSTTree(pRoute, i);
+	 BSTree* myTree = NULL;
+	 myTree = buildBSTTree(pRoute, i);
 	 printTree(myTree);
 	 for (int h = 0; h < i; h++) {
 		 city* temp = (city*)_leftMost(myTree->root);
