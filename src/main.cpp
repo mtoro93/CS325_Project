@@ -519,6 +519,10 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 	 delete [] pRoute;
 	 pRoute = 0;
 	 */
+	 /*int long long totesDist = 0;
+	 for (i = 1; i < route2.size(); i++) {
+		 totesDist += sqrt(pow(route2[i].cityXCoord - route2[i - 1].cityXCoord, 2) + pow(route2[i].cityYCoord - route2[i - 1].cityYCoord, 2));
+	 }*/
 	 
 	return 0;
  }
