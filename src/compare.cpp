@@ -53,6 +53,21 @@ int compareID(struct city* left, struct city* right)
 		return 1;
 }
 
+int compareY(struct city* left, struct city* right)
+{
+	int leftInt;
+	int rightInt;
+	leftInt = (left)->cityYCoord; //cast to data, then use the number values as ints
+	rightInt = (right)->cityYCoord;
+
+	if (rightInt > leftInt) //-1 for left less than right, 0 for equals, 1 for greater than
+		return -1;
+	else if (rightInt == leftInt)
+		return 0;
+	else
+		return 1;
+}
+
 /*Define this function, type casting the value of void * to the desired type*/
 void print_type(struct city* curval)
 {

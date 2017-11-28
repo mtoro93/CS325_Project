@@ -125,7 +125,7 @@ param:  cur	the current root node
 val	the value to be added to the binary search tree
 pre:	val is not null
 */
-struct Node *_addNode(struct Node *cur, struct city* val)
+struct Node *_addNode(struct Node *cur, struct city* val,int count)
 {
 	struct Node* newNode;
 	if (!cur) //if current node doesn't exist, make it
@@ -136,11 +136,22 @@ struct Node *_addNode(struct Node *cur, struct city* val)
 		newNode->left = newNode->right = 0;
 		return newNode;
 	}
-	if (compare(val, (struct city*)cur->val) == -1) //if value is less than current node's value, go down left side, otherwise go down right
-		cur->left = _addNode(cur->left, val);
+	if (count % 2 == 0)
+	{
+		if (compare(val, (struct city*)cur->val) == -1) //if value is less than current node's value, go down left side, otherwise go down right
+			cur->left = _addNode(cur->left, val, count++);
+		else
+			cur->right = _addNode(cur->right, val, count++);
+		return cur;
+	}
 	else
-		cur->right = _addNode(cur->right, val);
-	return cur;
+	{
+		if (compareY(val, (struct city*)cur->val) == -1) //if value is less than current node's value, go down left side, otherwise go down right
+			cur->left = _addNode(cur->left, val, count++);
+		else
+			cur->right = _addNode(cur->right, val, count++);
+		return cur;
+	}
 }
 
 /*
@@ -155,7 +166,7 @@ tree now contains the value, val
 */
 void addBSTree(struct BSTree *tree, struct city* val)
 {
-	tree->root = _addNode(tree->root, val);
+	tree->root = _addNode(tree->root, val,0);
 	tree->cnt++;
 }
 
