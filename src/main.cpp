@@ -178,7 +178,7 @@ struct Node *_addNode(struct Node *cur, struct city* val, struct BSTree* aTree)
 	}
 	else
 	{
-		if ((!!cur->right) && compareY(val, (struct city*)cur->right->val) != -1) {
+		if ((!!cur->right) && compareY(val, (struct city*)cur->right->val) == -1) {
 			
 			newNode = (struct Node*)malloc(sizeof(struct Node));
 			assert(newNode != 0);
