@@ -457,6 +457,7 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 	//this is the vector to store all cities on the route
 	vector <city> route;	
 	vector <city> route2;
+	vector <city> tempRoute;
 	
 	//string to read the line
 	//read untl the end of the file
@@ -465,9 +466,10 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 		int yValue;
 		int i = 0;
 		long long int sumDistance = 0;
+		int j = 0;
 	 while (inputFile >> cityValue)
 	{
-
+		
 		//cout<<lineCount;
 		//variable to hold city, x or y
 		route.push_back(city());
@@ -485,15 +487,24 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 		route[i].cityXCoord = xValue;
 		route[i].cityYCoord = yValue;
 		route[i].visited = false;
-		if (i > 0)
-			sumDistance+= distance(&route[i], &route[i - 1]);
+		if (i == 0)
+		{
+			tempRoute.push_back(city());
+			tempRoute[0] = route[i];
+		}
+		if (i > 0 && i % 10 == 0) {
+			sumDistance += distance(&tempRoute[0], &route[i]);
+			tempRoute[0] = route[i];
+			j++;
+		}
+			
 		//cout<<route[i].cityID << " ";
 		//cout<<route[i].cityXCoord << " ";
 		//cout<<route[i].cityYCoord<<endl;
 		i++;
 	}
-	//int average = sumDistance/i;
-	int average = 1000;
+	int average = sumDistance/j;
+	//int average = 1000;
 	 struct city** pRoute = new struct city*[i];
 	 for (int h = 0; h < i; h++)
 	 {
