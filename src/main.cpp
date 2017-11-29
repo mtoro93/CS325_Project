@@ -430,6 +430,79 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 		outputFile.close();
 	 
  }
+
+ int nearestNeighborNoWriteout(vector <city> &C, ofstream &outputFile, float start)
+ {
+	 //run algorithm, be sure to call checkTime frequently.
+	 city* cur = &C[0];
+	 cur->visited = true;
+	 int index;
+	 long long int tour = 0;
+	 for (int i = 0; i < C.size(); i++)
+	 {
+
+		 long long int min = LLONG_MAX;
+		 for (int k = 0; k < C.size(); k++)
+		 {
+			 if (cur->cityID != C[k].cityID && C[k].visited != true)
+			 {
+				 long long int temp = distance(cur, &C[k]);
+				 if (temp < min)
+				 {
+					 min = temp;
+					 cur->closestNeighbor = &C[k];
+					 cur->distanceToNeighbor = min;
+					 index = k;
+				 }
+			 }
+		 }
+		 tour += cur->distanceToNeighbor;
+			cur = &C[index];
+			cur->visited = true;
+	 }
+
+	 // complete the circuit routing the last city back to the first
+	 cur->distanceToNeighbor = distance(cur, &C[0]);
+	 tour += cur->distanceToNeighbor;
+	 cur->closestNeighbor = &C[0];
+
+	 //printf("tour length: %d\n", tour);
+
+	 //place the algorithim's trip count into the first line of out file
+	 //outputFile << tour;
+	// outputFile << endl;
+	 return tour;
+	 cur = &C[0];
+	 for (int j = 0; j < C.size(); j++)
+	 {
+		// outputFile << cur->cityID;
+		// outputFile << endl;
+		 cur = cur->closestNeighbor;
+	 }
+
+	 /*
+	 //place the algorithim's trip count into the first line of out file
+	 int testCount = 500;
+	 outputFile<< testCount;
+	 outputFile << endl;
+
+
+	 //place in outputFile by looping through vector
+	 int size = C.size();
+	 for (int i = 0; i < size; i++)
+	 {
+	 outputFile << C[i].cityID;
+	 outputFile << " ";
+	 outputFile << C[i].cityXCoord;
+	 outputFile << " ";
+	 outputFile << C[i].cityYCoord;
+	 outputFile << endl;
+
+	 }
+	 */
+	 //outputFile.close();
+
+ }
  
  int main(int argc, char* argv[])
  {
@@ -497,29 +570,56 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 			tempRoute[0] = route[i];
 			j++;
 		}
+
 			
 		//cout<<route[i].cityID << " ";
 		//cout<<route[i].cityXCoord << " ";
 		//cout<<route[i].cityYCoord<<endl;
 		i++;
 	}
-	int average = sumDistance/j;
-	//int average = 1000;
+	 
 	 struct city** pRoute = new struct city*[i];
 	 for (int h = 0; h < i; h++)
 	 {
 		 pRoute[h] = (struct city*)malloc(sizeof(struct city*));
 		 pRoute[h] = &route[h];
 	 }
-	 BSTree* myTree = buildBSTTree(pRoute, i, average);
-	 printTree(myTree);
-	 for (int h = 0; h < i; h++) {
-		 city* temp = (city*)_leftMost(myTree->root);
-		 route2[h].cityID = (*temp).cityID;
-		 route2[h].cityXCoord = (*temp).cityXCoord;
-		 route2[h].cityYCoord = (*temp).cityYCoord;
-		 _removeNode(myTree->root, temp, average);
-	 }
+	int average = sumDistance/j;
+	int max = INT_MAX;
+	int bestAverage = average;
+	//int average = 1000;
+	BSTree* myTree;
+	int testAverage;
+	for (int k = 0; k < 5; k++)
+	{
+		 testAverage = average / 4 * (pow(2, k));
+		 myTree = buildBSTTree(pRoute, i, testAverage);
+		//printTree(myTree);
+		for (int h = 0; h < i; h++) {
+			city* temp = (city*)_leftMost(myTree->root);
+			route2[h].cityID = (*temp).cityID;
+			route2[h].cityXCoord = (*temp).cityXCoord;
+			route2[h].cityYCoord = (*temp).cityYCoord;
+			_removeNode(myTree->root, temp, testAverage);
+		}
+		int tour = nearestNeighborNoWriteout(route2, outputFile, start);
+		if (tour < max)
+		{
+			max = tour;
+			bestAverage = testAverage;
+		}
+		route2 = route;
+	}
+
+	myTree = buildBSTTree(pRoute, i, bestAverage);
+	//printTree(myTree);
+	for (int h = 0; h < i; h++) {
+		city* temp = (city*)_leftMost(myTree->root);
+		route2[h].cityID = (*temp).cityID;
+		route2[h].cityXCoord = (*temp).cityXCoord;
+		route2[h].cityYCoord = (*temp).cityYCoord;
+		_removeNode(myTree->root, temp, bestAverage);
+	}
 	nearestNeighbor(route2, outputFile, start);	//call stub for algorithm.
 	 long long int finish = time(0);
 	 cout<<"Finish time is "<<finish<<endl;
