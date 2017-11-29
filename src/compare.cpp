@@ -24,7 +24,7 @@
   DO NOT compare the addresses pointed by left and right, i.e. "if (left < right)",
   which is really wrong.
  */
-int compare(struct city* left, struct city* right)
+int compare(struct city* left, struct city* right, int threshold)
 {
 	int leftInt;
 	int leftInt2;
@@ -35,7 +35,7 @@ int compare(struct city* left, struct city* right)
 	rightInt = (right)->cityXCoord;
 	rightInt2 = (right)->cityYCoord;
 		
-	if (sqrt(pow(rightInt - leftInt,2) + pow(leftInt2-rightInt2,2)) > 1000 ) //-1 for left less than right, 0 for equals, 1 for greater than
+	if (sqrt(pow(rightInt - leftInt,2) + pow(leftInt2-rightInt2,2)) > threshold ) //-1 for left less than right, 0 for equals, 1 for greater than
 		return -1;
 	else if (pow(rightInt, 2) + pow(rightInt2, 2) == pow(leftInt, 2) + pow(leftInt2, 2))
 		return 0;
