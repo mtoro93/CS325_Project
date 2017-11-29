@@ -125,7 +125,7 @@ param:  cur	the current root node
 val	the value to be added to the binary search tree
 pre:	val is not null
 */
-struct Node *_addNode(struct Node *cur, struct city* val)
+struct Node *_addNode(struct Node *cur, struct city* val, int threshold)
 {
 	struct Node* newNode;
 	if (!cur) //if current node doesn't exist, make it
@@ -136,10 +136,10 @@ struct Node *_addNode(struct Node *cur, struct city* val)
 		newNode->left = newNode->right = 0;
 		return newNode;
 	}
-	if (compare(val, (struct city*)cur->val) == -1) //if value is less than current node's value, go down left side, otherwise go down right
-		cur->left = _addNode(cur->left, val);
+	if (compare(val, (struct city*)cur->val, threshold) == -1) //if value is less than current node's value, go down left side, otherwise go down right
+		cur->left = _addNode(cur->left, val, threshold);
 	else
-		cur->right = _addNode(cur->right, val);
+		cur->right = _addNode(cur->right, val, threshold);
 	return cur;
 }
 
@@ -176,9 +176,9 @@ int containsBSTree(struct BSTree *tree, struct city* val)
 	struct Node* cur = tree->root;
 	while (cur != 0) //keep going down until you find a null Node, then return 0 if not found, 1 if found
 	{
-		if (compare(val, (struct city*)cur->val) == 0)
+		if (compare(val, (struct city*)cur->val, tree->threshold) == 0)
 			return 1;
-		else if (compare(val, (struct city*)cur->val) == 1)
+		else if (compare(val, (struct city*)cur->val, tree->threshold) == 1)
 			cur = cur->right;
 		else
 			cur = cur->left;
@@ -240,10 +240,10 @@ cur is not null
 val is not null
 */
 /*----------------------------------------------------------------------------*/
-struct Node *_removeNode(struct Node *cur, struct city* val)
+struct Node *_removeNode(struct Node *cur, struct city* val, int threshold)
 {
 	struct Node* temp;
-	if (compare(val, (struct city*)cur->val) == 0) //if you find the node, remove it
+	if (compare(val, (struct city*)cur->val, threshold) == 0) //if you find the node, remove it
 	{
 		if (compareID(val, (struct city*)cur->val) == 0) {
 			if (cur->right != 0) //if it has a right node, replace it with the leftmost of the right side
@@ -260,13 +260,13 @@ struct Node *_removeNode(struct Node *cur, struct city* val)
 			}
 		}
 		else {
-			cur->right = _removeNode(cur->right, val);
+			cur->right = _removeNode(cur->right, val, threshold);
 		}
 	}
-	else if (compare(val, (struct city*)cur->val) == -1) //keep going down left or right looking for the node
-		cur->left = _removeNode(cur->left, val);
+	else if (compare(val, (struct city*)cur->val, threshold) == -1) //keep going down left or right looking for the node
+		cur->left = _removeNode(cur->left, val, threshold);
 	else
-		cur->right = _removeNode(cur->right, val);
+		cur->right = _removeNode(cur->right, val, threshold);
 	return cur;
 }
 /*
@@ -281,7 +281,7 @@ pose:	tree size is reduced by 1
 void removeBSTree(struct BSTree *tree, struct city* val)
 {
 	if (containsBSTree(tree, val)) {
-		tree->root = _removeNode(tree->root, val);
+		tree->root = _removeNode(tree->root, val, tree->threshold);
 		tree->cnt--;
 	}
 }
@@ -464,6 +464,7 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 		int xValue;
 		int yValue;
 		int i = 0;
+		long long int sumDistance = 0;
 	 while (inputFile >> cityValue)
 	{
 
@@ -484,26 +485,29 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 		route[i].cityXCoord = xValue;
 		route[i].cityYCoord = yValue;
 		route[i].visited = false;
-		
+		if (i > 0)
+			sumDistance+= distance(&route[i], &route[i - 1]);
 		//cout<<route[i].cityID << " ";
 		//cout<<route[i].cityXCoord << " ";
 		//cout<<route[i].cityYCoord<<endl;
 		i++;
 	}
+	//int average = sumDistance/i;
+	int average = 1000;
 	 struct city** pRoute = new struct city*[i];
 	 for (int h = 0; h < i; h++)
 	 {
 		 pRoute[h] = (struct city*)malloc(sizeof(struct city*));
 		 pRoute[h] = &route[h];
 	 }
-	 BSTree* myTree = buildBSTTree(pRoute, i);
+	 BSTree* myTree = buildBSTTree(pRoute, i, average);
 	 printTree(myTree);
 	 for (int h = 0; h < i; h++) {
 		 city* temp = (city*)_leftMost(myTree->root);
 		 route2[h].cityID = (*temp).cityID;
 		 route2[h].cityXCoord = (*temp).cityXCoord;
 		 route2[h].cityYCoord = (*temp).cityYCoord;
-		 _removeNode(myTree->root, temp);
+		 _removeNode(myTree->root, temp, average);
 	 }
 	nearestNeighbor(route2, outputFile, start);	//call stub for algorithm.
 	 long long int finish = time(0);
