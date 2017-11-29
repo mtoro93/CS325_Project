@@ -31,4 +31,5 @@ struct Node {
 struct BSTree {
 	struct Node *root;
 	int          cnt;
+	int threshold;
 };

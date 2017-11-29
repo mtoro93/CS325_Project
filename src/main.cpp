@@ -155,7 +155,7 @@ tree now contains the value, val
 */
 void addBSTree(struct BSTree *tree, struct city* val)
 {
-	tree->root = _addNode(tree->root, val);
+	tree->root = _addNode(tree->root, val, tree->threshold);
 	tree->cnt++;
 }
 
@@ -301,10 +301,10 @@ void printTree(struct BSTree *tree) {
 	printNode(tree->root);
 }
 
-struct BSTree *buildBSTTree(struct city** pCity, int num) {
+struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 
 	struct BSTree *tree = newBSTree();
-
+	tree->threshold = threshold;
 	for (int i = 0; i<num; i++) {
 		addBSTree(tree, pCity[i]);
 	}
@@ -484,6 +484,7 @@ struct BSTree *buildBSTTree(struct city** pCity, int num) {
 		route[i].cityXCoord = xValue;
 		route[i].cityYCoord = yValue;
 		route[i].visited = false;
+		
 		//cout<<route[i].cityID << " ";
 		//cout<<route[i].cityXCoord << " ";
 		//cout<<route[i].cityYCoord<<endl;
