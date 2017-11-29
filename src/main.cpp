@@ -22,6 +22,7 @@
 #include <vector>
 //#include "bst.hpp"
 #include "compare.hpp"
+int depth = 0;
 
 
 /*----------------------------------------------------------------------------*/
@@ -127,6 +128,8 @@ pre:	val is not null
 */
 struct Node *_addNode(struct Node *cur, struct city* val, int threshold)
 {
+	if (depth >= 4350)
+		return NULL;
 	struct Node* newNode;
 	if (!cur) //if current node doesn't exist, make it
 	{
@@ -137,9 +140,15 @@ struct Node *_addNode(struct Node *cur, struct city* val, int threshold)
 		return newNode;
 	}
 	if (compare(val, (struct city*)cur->val, threshold) == -1) //if value is less than current node's value, go down left side, otherwise go down right
+	{
+		depth++;
 		cur->left = _addNode(cur->left, val, threshold);
+	}
 	else
+	{
+		depth++;
 		cur->right = _addNode(cur->right, val, threshold);
+	}
 	return cur;
 }
 
@@ -156,6 +165,12 @@ tree now contains the value, val
 void addBSTree(struct BSTree *tree, struct city* val)
 {
 	tree->root = _addNode(tree->root, val, tree->threshold);
+	if (depth >= 4350)
+	{
+		depth = 0;
+		return;
+	}
+	depth = 0;
 	tree->cnt++;
 }
 
@@ -594,6 +609,10 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 	{
 		 testAverage = average / 4 * (pow(2, k));
 		 myTree = buildBSTTree(pRoute, i, testAverage);
+		 if (myTree->cnt != i) {
+		 }
+		 else {
+
 		//printTree(myTree);
 		for (int h = 0; h < i; h++) {
 			city* temp = (city*)_leftMost(myTree->root);
@@ -609,7 +628,9 @@ struct BSTree *buildBSTTree(struct city** pCity, int num, int threshold) {
 			bestAverage = testAverage;
 		}
 		route2 = route;
+		 }
 	}
+	
 
 	myTree = buildBSTTree(pRoute, i, bestAverage);
 	//printTree(myTree);
